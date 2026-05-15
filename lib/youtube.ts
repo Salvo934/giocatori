@@ -1,6 +1,3 @@
-/**
- * Risolve l'ID video da URL YouTube (watch, youtu.be, shorts, embed, /v/).
- */
 export function youtubeVideoId(rawUrl: string): string | null {
   const trimmed = rawUrl.trim();
   if (!trimmed) return null;
@@ -32,18 +29,11 @@ export function youtubeVideoId(rawUrl: string): string | null {
   }
 }
 
-/**
- * Cover di anteprima (Media Quality) da URL YouTube, se riconosciuto.
- */
 export function youtubeThumbnailUrl(rawUrl: string): string | null {
   const id = youtubeVideoId(rawUrl);
   return id ? `https://i.ytimg.com/vi/${id}/mqdefault.jpg` : null;
 }
 
-/**
- * Restituisce l'URL base dell'embed YouTube (privacy-enhanced) se il link è riconosciuto,
- * altrimenti stringa vuota. L'iframe può aggiungere query (es. ?rel=0).
- */
 export function youtubeEmbedUrl(rawUrl: string): string {
   const id = youtubeVideoId(rawUrl);
   return id ? `https://www.youtube-nocookie.com/embed/${id}` : "";

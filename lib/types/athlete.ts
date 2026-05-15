@@ -143,8 +143,6 @@ export interface AthleteProfile {
     identityNote?: string;
     /** Ritaglio foto hero: utile per ritratti verticali */
     heroImageFocus?: "top" | "center" | "bottom";
-    /** Retro della card foto al hover: breve storia personale */
-    personalStory?: string;
     marketStatusLabel: string;
     agency: AgencyRef;
     lastUpdated: string;

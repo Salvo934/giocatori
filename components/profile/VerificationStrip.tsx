@@ -1,31 +1,30 @@
 import type { AthleteProfile } from "@/lib/types/athlete";
-import { SectionShell } from "./SectionShell";
 
 type Props = { athlete: AthleteProfile };
 
 export function VerificationStrip({ athlete }: Props) {
+  const badges = athlete.verifications;
+
   return (
-    <SectionShell
-      id="verifiche"
-      eyebrow="Affidabilità"
-      title="Verifiche"
-      description="Badge di coerenza dati: utili a procuratori e club per comunicare il livello di diligence sul profilo."
-    >
-      <div className="flex flex-wrap gap-3">
-        {athlete.verifications.map((b) => (
-          <div
-            key={b.id}
-            className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${
-              b.ok
-                ? "bg-accent/15 text-accent ring-1 ring-accent/25"
-                : "bg-white/5 text-zinc-500 line-through decoration-white/20"
-            }`}
-          >
-            <span>{b.ok ? "✓" : "○"}</span>
-            {b.label}
-          </div>
-        ))}
+    <div className="border-b border-white/6 bg-black/35 py-6 md:py-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-zinc-600">Verification</p>
+        <div className="mt-4 flex flex-wrap gap-3">
+          {badges.map((b) => (
+            <div
+              key={b.id}
+              className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider ${
+                b.ok
+                  ? "border-accent/35 bg-accent/10 text-accent"
+                  : "border-white/12 bg-white/4 text-zinc-500"
+              }`}
+            >
+              <span className={`size-1.5 shrink-0 rounded-full ${b.ok ? "bg-accent" : "bg-zinc-600"}`} aria-hidden />
+              {b.label}
+            </div>
+          ))}
+        </div>
       </div>
-    </SectionShell>
+    </div>
   );
 }

@@ -17,11 +17,10 @@ const bebasNeue = Bebas_Neue({
 
 export const metadata: Metadata = {
   title: {
-    default: "Giocatori · Player card per procuratori e agenzie basket",
+    default: "Giocatori · Player card basket",
     template: "%s · Giocatori",
   },
-  description:
-    "Schede giocatore con numeri, video, scout view e contatti: strumento per procuratori e agenzie di pallacanestro.",
+  description: "Schede giocatore per procuratori e agenzie di basket.",
 };
 
 export default function RootLayout({
@@ -30,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="it" className={`${dmSans.variable} ${bebasNeue.variable}`}>
+    <html lang="it" className={[dmSans.variable, bebasNeue.variable].join(" ")}>
       <body className="antialiased">{children}</body>
     </html>
   );
