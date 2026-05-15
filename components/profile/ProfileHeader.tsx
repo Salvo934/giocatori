@@ -206,40 +206,75 @@ export function ProfileHeader({ athlete }: Props) {
             </div>
           </div>
 
-          {/* Avatar: cerchio con anello gradient, badge maglia */}
+          {/* Avatar: cornice conica, depth stack, badge maglia */}
           <div className="order-1 mx-auto flex w-full max-w-82 flex-col items-center lg:order-2 lg:mx-0 lg:max-w-88 lg:items-end lg:pb-2">
             <div className="relative w-full max-w-[min(20.5rem,88vw)]">
+              {/* Alone doppio: accent caldo + spill blu */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute -inset-6 rounded-full bg-accent/15 blur-3xl"
+                className="pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(circle,var(--accent-glow)_0%,transparent_68%)] opacity-70 blur-3xl"
               />
-              <div className="relative rounded-full bg-linear-to-br from-accent/55 via-white/25 to-sky-400/35 p-[3px] shadow-[0_0_48px_-12px_rgba(223,255,74,0.4)]">
-                <div className="rounded-full bg-zinc-950 p-1.5 sm:p-2">
-                  <div className="relative aspect-square overflow-hidden rounded-full ring-1 ring-white/15">
-                    <Image
-                      src={h.heroImage}
-                      alt={`${h.name} — foto profilo`}
-                      fill
-                      priority
-                      quality={95}
-                      sizes="(max-width: 1024px) 88vw, 22rem"
-                      className={`object-cover ${objectPosition}`}
-                    />
-                    <div
-                      aria-hidden
-                      className="pointer-events-none absolute inset-0 rounded-full bg-linear-to-t from-black/45 via-transparent to-white/7"
-                    />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -bottom-8 -right-8 size-[55%] rounded-full bg-[radial-gradient(circle,rgba(96,165,250,0.18)_0%,transparent_70%)] blur-3xl"
+              />
+              {/* Ombra portata sotto il disco */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -bottom-2 left-[10%] right-[10%] h-8 rounded-[100%] bg-black/50 blur-xl"
+              />
+
+              <div className="relative mx-auto aspect-square max-w-[min(20.5rem,88vw)]">
+                {/* Ring esterno decorativo */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -inset-1 rounded-full bg-[conic-gradient(from_200deg,var(--accent)_0%,rgba(223,255,74,0.12)_22%,rgba(255,255,255,0.35)_42%,rgba(147,197,253,0.28)_62%,rgba(223,255,74,0.15)_82%,var(--accent)_100%)] p-[3px] shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_24px_50px_-20px_rgba(0,0,0,0.85),0_0_52px_-18px_var(--accent-glow)] sm:-inset-1.5 sm:p-[3.5px]"
+                >
+                  <div className="size-full rounded-full bg-zinc-950 p-[3px] sm:p-1">
+                    <div className="relative size-full overflow-hidden rounded-full shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08),inset_0_8px_24px_rgba(0,0,0,0.55)]">
+                      <Image
+                        src={h.heroImage}
+                        alt={`${h.name} — foto profilo`}
+                        fill
+                        priority
+                        quality={95}
+                        sizes="(max-width: 1024px) 88vw, 22rem"
+                        className={`object-cover ${objectPosition} scale-[1.02]`}
+                      />
+                      {/* Profondità foto: vignetta + lucido bordo alto */}
+                      <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(ellipse_80%_70%_at_50%_38%,transparent_42%,rgba(0,0,0,0.55)_88%,rgba(0,0,0,0.82)_100%)]"
+                      />
+                      <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0 rounded-full bg-linear-to-br from-white/18 via-transparent to-transparent opacity-55 mask-[radial-gradient(ellipse_120%_80%_at_50%_-20%,black_42%,transparent_72%)]"
+                      />
+                      <div
+                        aria-hidden
+                        className="pointer-events-none absolute inset-px rounded-full ring-1 ring-inset ring-white/12"
+                      />
+                    </div>
                   </div>
                 </div>
+
+                {jersey ? (
+                  <div className="absolute -bottom-0.5 -right-0.5 z-10 flex size-[3.35rem] items-center justify-center sm:-bottom-1 sm:-right-1 sm:size-16">
+                    <div className="relative flex size-full items-center justify-center rounded-full bg-zinc-950 p-[3px] shadow-[0_14px_36px_-6px_rgba(0,0,0,0.8)] ring-1 ring-white/12">
+                      <div className="size-full rounded-full bg-linear-to-br from-[#f3ff96] via-accent to-[#cae92a] p-px shadow-[inset_0_1px_0_0_rgba(255,255,255,0.65)] ring-2 ring-black/30">
+                        <div className="flex size-full items-center justify-center rounded-full bg-linear-to-b from-[#eeff71] to-[#dfff4a] shadow-[inset_0_3px_6px_rgba(255,255,255,0.35)]">
+                          <span
+                            className="translate-y-px text-base font-black tabular-nums tracking-tighter text-black drop-shadow-[0_1px_0_rgba(255,255,255,0.35)] sm:text-lg"
+                            style={{ fontFamily: "var(--font-bebas)" }}
+                          >
+                            #{jersey}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
               </div>
-              {jersey ? (
-                <div
-                  className="absolute -bottom-0.5 -right-0.5 flex size-12 items-center justify-center rounded-full border-[3px] border-zinc-950 bg-accent text-sm font-black tabular-nums tracking-tight text-black shadow-[0_10px_28px_rgba(0,0,0,0.55)] sm:size-14 sm:text-base"
-                  style={{ fontFamily: "var(--font-bebas)" }}
-                >
-                  #{jersey}
-                </div>
-              ) : null}
             </div>
             <p
               className="mt-4 text-center text-[10px] font-bold uppercase tracking-[0.24em] text-zinc-500 lg:text-right"
