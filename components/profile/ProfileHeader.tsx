@@ -37,6 +37,23 @@ function formatStat(v: number) {
   return Number.isInteger(n) ? String(n) : n.toFixed(1).replace(/\.0$/, "");
 }
 
+const MAX_AVATAR_STORY_CHARS = 380;
+
+/** Testo da mostrare sul retro dell'avatar (hover / focus). */
+function avatarFlipStory(a: AthleteProfile): string | null {
+  const fromHeader = (a.header.personalStory ?? a.header.dashboardIntro ?? "").trim();
+  if (fromHeader) return fromHeader;
+
+  const scout = a.scoutView.shortProfile.trim();
+  if (!scout) return null;
+  if (scout.length <= MAX_AVATAR_STORY_CHARS) return scout;
+
+  const cut = scout.slice(0, MAX_AVATAR_STORY_CHARS);
+  const lastSpace = cut.lastIndexOf(" ");
+  const base = (lastSpace > 220 ? cut.slice(0, lastSpace) : cut).trimEnd();
+  return `${base}…`;
+}
+
 const HERO_FOCUS_CLASS = {
   top: "object-top",
   center: "object-center",
@@ -53,8 +70,7 @@ export function ProfileHeader({ athlete }: Props) {
   const focus = h.heroImageFocus ?? "center";
   const objectPosition = HERO_FOCUS_CLASS[focus] ?? "object-center";
   const jersey = h.number?.replace(/\D/g, "") ?? "";
-  const flipStoryRaw = (h.personalStory ?? h.dashboardIntro ?? "").trim();
-  const flipStory = flipStoryRaw.length > 0 ? flipStoryRaw : null;
+  const flipStory = avatarFlipStory(athlete);
 
   return (
     <header className="relative overflow-hidden border-b border-white/6">
@@ -354,6 +370,11 @@ export function ProfileHeader({ athlete }: Props) {
                 </>
               ) : null}
             </p>
+            {flipStory ? (
+              <p className="mt-2 max-w-[min(20.5rem,88vw)] text-center text-[10px] leading-relaxed text-zinc-600 lg:ml-auto lg:text-right">
+                Passa il cursore sulla foto — storia in breve sul retro
+              </p>
+            ) : null}
           </div>
         </div>
       </div>
