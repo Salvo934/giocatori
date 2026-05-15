@@ -44,6 +44,8 @@ export interface AthleteVideo {
 
 export interface AthleteVideos {
   main: AthleteVideo & { provider?: VideoProvider };
+  /** Max 2 consigliati: miniature accanto al player principale in Film room */
+  filmRoomSide?: AthleteVideo[];
   categories: Array<{
     id: VideoCategoryId;
     label: string;
@@ -141,6 +143,8 @@ export interface AthleteProfile {
     identityNote?: string;
     /** Ritaglio foto hero: utile per ritratti verticali */
     heroImageFocus?: "top" | "center" | "bottom";
+    /** Retro della card foto al hover: breve storia personale */
+    personalStory?: string;
     marketStatusLabel: string;
     agency: AgencyRef;
     lastUpdated: string;

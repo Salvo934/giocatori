@@ -27,6 +27,8 @@ export const ilarioSimonetti: AthleteProfile = {
       "Ala piccola con corpo da elite fisica: spalle larghe, compattezza nei contatti e capacità di finire attraverso il fisico. Mano dominante destra, uso avanzato della sinistra in penetrazione, passaggio e galleggi verso il ferro.",
     dashboardIntro:
       "Ala piccola classe 2004, 200 cm, in contesto Serie B nazionale: profilo orientato a spacing e versatilità sulle ali, con valore nel mismatch e nel gioco vicino alla zona. Scheda per valutazione rapida: identità fisico-tecnica, numeri, clip e contatto col referente.",
+    personalStory:
+      "Ferrara, vivaio e raduni fin da piccolo: il basket è diventato un modo per mettersi in gioco tra trasferte e cambi squadra. Oggi a Latina lavora ogni giorno su dettagli e ruolo da ala—crede nel percorso più che nel titolo, e cerca uno staff che investa sul lungo periodo.",
     agency: {
       name: "KataHero Agency",
       representative: "Staff scouting & player management",
@@ -68,6 +70,16 @@ export const ilarioSimonetti: AthleteProfile = {
       url: "https://www.youtube.com/watch?v=lVvjB86NlPM",
       provider: "youtube",
     },
+    filmRoomSide: [
+      {
+        title: "Film room — clip 1",
+        url: "https://www.youtube.com/watch?v=JYJfGWHTEho",
+      },
+      {
+        title: "Film room — clip 2",
+        url: "https://www.youtube.com/watch?v=Zvu_SEi4XdU",
+      },
+    ],
     categories: [
       {
         id: "shooting",

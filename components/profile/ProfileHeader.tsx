@@ -53,6 +53,8 @@ export function ProfileHeader({ athlete }: Props) {
   const focus = h.heroImageFocus ?? "center";
   const objectPosition = HERO_FOCUS_CLASS[focus] ?? "object-center";
   const jersey = h.number?.replace(/\D/g, "") ?? "";
+  const flipStoryRaw = (h.personalStory ?? h.dashboardIntro ?? "").trim();
+  const flipStory = flipStoryRaw.length > 0 ? flipStoryRaw : null;
 
   return (
     <header className="relative overflow-hidden border-b border-white/6">
@@ -231,30 +233,92 @@ export function ProfileHeader({ athlete }: Props) {
                   className="pointer-events-none absolute -inset-1 rounded-full bg-[conic-gradient(from_200deg,var(--accent)_0%,rgba(223,255,74,0.12)_22%,rgba(255,255,255,0.35)_42%,rgba(147,197,253,0.28)_62%,rgba(223,255,74,0.15)_82%,var(--accent)_100%)] p-[3px] shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_24px_50px_-20px_rgba(0,0,0,0.85),0_0_52px_-18px_var(--accent-glow)] sm:-inset-1.5 sm:p-[3.5px]"
                 >
                   <div className="size-full rounded-full bg-zinc-950 p-[3px] sm:p-1">
-                    <div className="relative size-full overflow-hidden rounded-full shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08),inset_0_8px_24px_rgba(0,0,0,0.55)]">
-                      <Image
-                        src={h.heroImage}
-                        alt={`${h.name} — foto profilo`}
-                        fill
-                        priority
-                        quality={95}
-                        sizes="(max-width: 1024px) 88vw, 22rem"
-                        className={`object-cover ${objectPosition} scale-[1.02]`}
-                      />
-                      {/* Profondità foto: vignetta + lucido bordo alto */}
+                    {flipStory ? (
                       <div
-                        aria-hidden
-                        className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(ellipse_80%_70%_at_50%_38%,transparent_42%,rgba(0,0,0,0.55)_88%,rgba(0,0,0,0.82)_100%)]"
-                      />
-                      <div
-                        aria-hidden
-                        className="pointer-events-none absolute inset-0 rounded-full bg-linear-to-br from-white/18 via-transparent to-transparent opacity-55 mask-[radial-gradient(ellipse_120%_80%_at_50%_-20%,black_42%,transparent_72%)]"
-                      />
-                      <div
-                        aria-hidden
-                        className="pointer-events-none absolute inset-px rounded-full ring-1 ring-inset ring-white/12"
-                      />
-                    </div>
+                        className="group/card relative size-full cursor-pointer rounded-full outline-none ring-offset-2 ring-offset-zinc-950 perspective-[1000px] focus-visible:ring-2 focus-visible:ring-accent/55 motion-reduce:cursor-default"
+                        tabIndex={0}
+                        aria-label={`${h.name}: passa il cursore o focalizza qui per leggere una nota personale.`}
+                      >
+                        <div
+                          className="relative isolate aspect-square size-full transform-3d transition-transform duration-650 ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:duration-150 motion-reduce:group-hover/card:transform-none motion-reduce:group-focus-visible/card:transform-none group-hover/card:transform-[rotateY(180deg)] group-focus-visible/card:transform-[rotateY(180deg)]"
+                        >
+                          {/* Fronte */}
+                          <div className="absolute inset-0 overflow-hidden rounded-full shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08),inset_0_8px_24px_rgba(0,0,0,0.55)] backface-hidden">
+                            <Image
+                              src={h.heroImage}
+                              alt={`${h.name} — foto profilo`}
+                              fill
+                              priority
+                              quality={95}
+                              sizes="(max-width: 1024px) 88vw, 22rem"
+                              className={`object-cover ${objectPosition} scale-[1.02]`}
+                            />
+                            <div
+                              aria-hidden
+                              className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(ellipse_80%_70%_at_50%_38%,transparent_42%,rgba(0,0,0,0.55)_88%,rgba(0,0,0,0.82)_100%)]"
+                            />
+                            <div
+                              aria-hidden
+                              className="pointer-events-none absolute inset-0 rounded-full bg-linear-to-br from-white/18 via-transparent to-transparent opacity-55 mask-[radial-gradient(ellipse_120%_80%_at_50%_-20%,black_42%,transparent_72%)]"
+                            />
+                            <div
+                              aria-hidden
+                              className="pointer-events-none absolute inset-px rounded-full ring-1 ring-inset ring-white/12"
+                            />
+                            <div
+                              aria-hidden
+                              className="pointer-events-none absolute bottom-2 left-0 right-0 flex justify-center sm:bottom-3"
+                            >
+                              <span className="rounded-full border border-white/15 bg-black/45 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em] text-zinc-200 backdrop-blur-sm">
+                                Storia
+                              </span>
+                            </div>
+                          </div>
+                          {/* Retro */}
+                          <div
+                            className="absolute inset-0 overflow-y-auto rounded-full border border-accent/35 bg-linear-to-br from-zinc-900 via-black to-zinc-950 p-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06),inset_0_-20px_40px_-12px_var(--accent-dim)] backface-hidden sm:p-6 transform-[rotateY(180deg)]"
+                          >
+                            <div className="flex min-h-full flex-col justify-center">
+                              <p
+                                className="text-center text-[10px] font-bold uppercase tracking-[0.24em] text-accent"
+                                style={{ fontFamily: "var(--font-bebas)" }}
+                              >
+                                In breve
+                              </p>
+                              <div
+                                aria-hidden
+                                className="mx-auto my-3 h-px max-w-16 bg-linear-to-r from-transparent via-accent/60 to-transparent"
+                              />
+                              <p className="text-center text-xs leading-relaxed text-zinc-300 sm:text-sm">{flipStory}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="relative size-full overflow-hidden rounded-full shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08),inset_0_8px_24px_rgba(0,0,0,0.55)]">
+                        <Image
+                          src={h.heroImage}
+                          alt={`${h.name} — foto profilo`}
+                          fill
+                          priority
+                          quality={95}
+                          sizes="(max-width: 1024px) 88vw, 22rem"
+                          className={`object-cover ${objectPosition} scale-[1.02]`}
+                        />
+                        <div
+                          aria-hidden
+                          className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(ellipse_80%_70%_at_50%_38%,transparent_42%,rgba(0,0,0,0.55)_88%,rgba(0,0,0,0.82)_100%)]"
+                        />
+                        <div
+                          aria-hidden
+                          className="pointer-events-none absolute inset-0 rounded-full bg-linear-to-br from-white/18 via-transparent to-transparent opacity-55 mask-[radial-gradient(ellipse_120%_80%_at_50%_-20%,black_42%,transparent_72%)]"
+                        />
+                        <div
+                          aria-hidden
+                          className="pointer-events-none absolute inset-px rounded-full ring-1 ring-inset ring-white/12"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
 

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { AthleteProfile, AthleteVideo, VideoCategoryId } from "@/lib/types/athlete";
-import { youtubeEmbedUrl } from "@/lib/youtube";
+import { youtubeEmbedUrl, youtubeThumbnailUrl } from "@/lib/youtube";
 import { SectionShell } from "./SectionShell";
 
 type Props = { athlete: AthleteProfile };
@@ -77,6 +77,62 @@ function BroadcastFrame({
   );
 }
 
+function FilmRoomThumbnail({
+  clip,
+  selected,
+  onSelect,
+}: {
+  clip: AthleteVideo;
+  selected: boolean;
+  onSelect: () => void;
+}) {
+  const thumb = youtubeThumbnailUrl(clip.url);
+
+  return (
+    <button
+      type="button"
+      aria-pressed={selected}
+      onClick={onSelect}
+      className={`group relative w-full shrink-0 overflow-hidden rounded-lg border bg-black text-left outline-none ring-offset-2 ring-offset-black transition hover:border-[#C9082A]/55 focus-visible:ring-2 focus-visible:ring-[#C9082A] sm:w-[min(42vw,12rem)] lg:w-full lg:flex-1 ${
+        selected
+          ? "border-[#C9082A] shadow-[0_0_26px_-6px_rgba(201,8,42,0.55)]"
+          : "border-white/14 hover:bg-white/3"
+      }`}
+    >
+      <div className="relative aspect-video">
+        {thumb ? (
+          <img
+            src={thumb}
+            alt=""
+            className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-zinc-900 text-[10px] font-bold uppercase text-zinc-500">
+            Clip
+          </div>
+        )}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-linear-to-t from-black via-black/45 to-transparent"
+        />
+        {selected ? (
+          <span className="pointer-events-none absolute left-1.5 top-1.5 rounded bg-[#C9082A] px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wider text-white shadow-lg">
+            In play
+          </span>
+        ) : (
+          <span className="pointer-events-none absolute left-2 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-black/55 text-[10px] text-white backdrop-blur-sm transition group-hover:scale-105 group-hover:border-[#C9082A]/60">
+            ▶
+          </span>
+        )}
+        <p className="absolute bottom-1.5 left-2 right-2 line-clamp-2 text-[10px] font-bold uppercase leading-tight tracking-wide text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]">
+          {clip.title}
+        </p>
+      </div>
+    </button>
+  );
+}
+
 function ClipRow({ index, clip }: { index: number; clip: AthleteVideo }) {
   const hasYt = Boolean(youtubeEmbedUrl(clip.url));
   return (
@@ -109,7 +165,12 @@ function ClipRow({ index, clip }: { index: number; clip: AthleteVideo }) {
 export function VideoHub({ athlete }: Props) {
   const v = athlete.videos;
   const h = athlete.header;
-  const mainSrc = youtubeEmbedUrl(v.main.url);
+
+  const sideClips = v.filmRoomSide ?? [];
+  const [filmRoomFocus, setFilmRoomFocus] = useState<"main" | number>("main");
+  const playing =
+    filmRoomFocus === "main" ? v.main : (sideClips[filmRoomFocus] ?? v.main);
+  const mainSrc = youtubeEmbedUrl(playing.url);
 
   const firstId = v.categories[0]?.id ?? "shooting";
   const [activeId, setActiveId] = useState<VideoCategoryId>(firstId);
@@ -141,26 +202,58 @@ export function VideoHub({ athlete }: Props) {
       >
         {/* Highlight principale */}
         <BroadcastFrame
-          title={v.main.title}
+          title={playing.title}
           athleteName={h.name}
           number={h.number}
           role={h.role}
         >
-          <div className="aspect-video w-full bg-zinc-950">
-            {mainSrc ? (
-              <iframe
-                title={v.main.title}
-                src={`${mainSrc}?rel=0`}
-                className="h-full w-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            ) : (
-              <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-center">
-                <p className="text-sm font-semibold text-zinc-400">Nessun embed valido</p>
-                <p className="text-xs text-zinc-600">Imposta un URL YouTube in `videos.main.url`.</p>
+          <div className="p-4 md:p-5">
+            <div
+              className={`grid gap-3 ${sideClips.length > 0 ? "lg:grid-cols-[minmax(0,1fr)_minmax(148px,16rem)] lg:gap-4" : ""}`}
+            >
+              <div className="relative aspect-video min-h-0 w-full overflow-hidden bg-zinc-950">
+                {mainSrc ? (
+                  <iframe
+                    key={playing.url}
+                    title={playing.title}
+                    src={`${mainSrc}?rel=0`}
+                    className="h-full w-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : (
+                  <div className="flex h-full flex-col items-center justify-center gap-2 p-6 text-center">
+                    <p className="text-sm font-semibold text-zinc-400">Nessun embed valido</p>
+                    <p className="text-xs text-zinc-600">Serve un URL YouTube per questo clip.</p>
+                  </div>
+                )}
               </div>
-            )}
+
+              {sideClips.length > 0 ? (
+                <div className="flex flex-row gap-2 lg:flex-col lg:justify-center lg:gap-3">
+                  {sideClips.map((clip, i) => (
+                    <FilmRoomThumbnail
+                      key={`${clip.url}-${i}`}
+                      clip={clip}
+                      selected={filmRoomFocus === i}
+                      onSelect={() => setFilmRoomFocus(i)}
+                    />
+                  ))}
+                </div>
+              ) : null}
+            </div>
+
+            {sideClips.length > 0 && filmRoomFocus !== "main" ? (
+              <div className="mt-3 flex justify-center lg:justify-start">
+                <button
+                  type="button"
+                  onClick={() => setFilmRoomFocus("main")}
+                  className="rounded-md border border-white/14 bg-white/5 px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-zinc-200 transition hover:border-[#17408B]/45 hover:bg-[#17408B]/15 hover:text-white"
+                >
+                  ← Highlights principali
+                </button>
+              </div>
+            ) : null}
           </div>
         </BroadcastFrame>
 
